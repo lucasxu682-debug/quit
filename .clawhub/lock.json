@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "skills": {
+    "github": {
+      "version": "1.0.0",
+      "installedAt": 1773697202375
+    },
+    "openai-whisper": {
+      "version": "1.0.0",
+      "installedAt": 1773697209152
+    },
+    "mcporter": {
+      "version": "1.0.0",
+      "installedAt": 1773699001747
+    },
+    "superpowers": {
+      "version": "1.0.0",
+      "installedAt": 1773701461881
+    },
+    "doc-converter": {
+      "version": "1.0.0",
+      "installedAt": 1773702605065
+    }
+  }
+}

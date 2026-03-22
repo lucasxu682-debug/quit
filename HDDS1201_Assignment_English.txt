@@ -1,0 +1,179 @@
+HDDS1201 Introduction to Data Science
+Individual Assignment
+
+Student Name: [Your Name]
+Student ID: [Your Student ID]
+Course Code: HDDS1201
+Course Title: Introduction to Data Science
+
+
+1. Introduction
+
+1.1 Project Background
+
+Well, QuickBite is in a bit of a mess right now. As a newly hired data scientist, walking into a crisis meeting on day one isn't exactly the welcome I expected. The company is struggling with an on-time delivery rate of just 82%, which is way below the 95% target. On top of that, 15% of top restaurants left in Q1, and the "Free Lunch" campaign lost HKD 500,000.
+
+Looking at what Sarah showed me—the customer complaints, the termination email from Uncle Wong, and the internal dashboard—it's pretty obvious what's happening. The data is there, just sitting around unused. GPS logs, order timestamps, user history... all collected but not really analyzed.
+
+1.2 Overall Business Goals
+
+So this project is basically about fixing four things:
+
+First, figure out what's causing the delivery delays—is it traffic, riders taking detours, or restaurants being slow? Second, build a model to predict which restaurants might leave, like Uncle Wong, so we can catch them early. Third, figure out who actually deserves coupons instead of giving free food to everyone and losing money. Fourth, optimize rider allocation during lunch rush (12:00-14:00) to save about 10 minutes per delivery.
+
+Plus, there's this tricky situation with Kevin's "Project God's Eye" idea. Sounds cool, but the legal team has concerns, so we need to balance business benefits with user privacy.
+
+
+2. Project Life Cycle and Stages
+
+2.1 Overall Life Cycle
+
+Data science projects usually follow these stages: Business Understanding, Data Collection, Data Preparation, Modeling, Evaluation, and Deployment. That's what CRISP-DM says anyway, though in practice it's more like jumping back and forth rather than a straight line.
+
+2.2 Stage-by-Stage Workflow
+
+Stage 1: Business Understanding
+
+This stage is mostly about talking to business teams and figuring out what they actually need. I'd meet with Sarah and the Operations team to understand patterns in those 18% delayed orders. Are they concentrated in certain areas or time periods? Are there early warning signs for restaurant churn?
+
+For example, we might find that delayed orders mostly happen during 12:00-14:00 lunch rush in business districts. That's a key insight—it suggests we don't have enough riders, rather than restaurant problems.
+
+Milestone: Define analysis directions for the four problems and identify required data sources.
+
+Stage 2: Data Collection
+
+QuickBite actually has pretty comprehensive data—GPS logs, order timestamps, user history. The problem is they're scattered across different systems and need to be integrated. I'd pull together rider GPS data, order timestamps, restaurant info, and user profiles.
+
+For analyzing delivery delays, I'd need:
+- Order creation time, restaurant acceptance time, rider pickup time, delivery time
+- Rider GPS trajectories
+- Restaurant locations, customer locations
+- Traffic data (might need to buy from third parties)
+
+Milestone: Complete data integration and establish a unified data warehouse.
+
+Stage 3: Data Preparation
+
+Raw data is usually messy and needs cleaning. GPS coordinates might have outliers (riders in the river?), timestamps might be missing, user ages might be negative (obviously fake).
+
+I'd do these tasks:
+- Remove duplicate orders
+- Fill or delete missing values
+- Handle outliers (like delivery times over 2 hours, probably data errors)
+- Create new features like "straight-line distance from restaurant to customer" and "order time period" (lunch/dinner/late night)
+
+Milestone: Obtain clean, usable datasets.
+
+Stage 4: Modeling
+
+This is where we build the models. Each problem needs different approaches:
+
+For delivery delay root cause analysis, maybe use decision trees or random forests to see which factors matter most. Distance? Time period? Restaurant type?
+
+Restaurant churn prediction could use logistic regression or XGBoost to predict each restaurant's churn probability next month. Features include: monthly order volume changes, rating trends, complaint counts, remaining contract time, etc.
+
+Customer value analysis using K-means clustering to segment users. Like "high-value loyal users," "price-sensitive users," "occasional users." This way coupons can be targeted precisely instead of giving money away to everyone.
+
+Rider dispatch optimization is more complex, might need operations research methods like linear programming to allocate riders to high-order-density areas during lunch rush.
+
+Milestone: Complete four models with preliminary validation.
+
+Stage 5: Evaluation
+
+Models are built, but we need to check if they're actually useful. Can't just look at accuracy—need to see business value.
+
+For example, a restaurant churn prediction model with 90% accuracy sounds good, but if actual churn rate is only 5%, the model might predict "no churn" for most restaurants, which isn't helpful. Need to look at precision and recall, especially recall—we want to find as many at-risk restaurants as possible, even with some false positives.
+
+Also A/B testing, like for coupon strategies. Test on a small scale first, see if conversion and retention rates improve before full rollout.
+
+Milestone: Models pass evaluation, ready for deployment.
+
+Stage 6: Deployment
+
+Finally, put the models into actual business use. Like:
+- Add a "restaurant health score" on the dashboard, with red alerts for those needing attention
+- Coupon system automatically identifies high-value users and sends personalized offers
+- Rider dispatch system automatically reminds riders to standby in hotspot areas before lunch rush
+
+Also need to monitor effectiveness, like whether on-time delivery rate improves and restaurant churn rate drops after deployment.
+
+Milestone: Models go live with continuous monitoring and optimization.
+
+
+3. Data Maturity Assessment
+
+3.1 Current Maturity Level
+
+According to Gartner's Data Maturity Model, QuickBite is probably between Level 2 (Managed) and Level 3 (Defined).
+
+Why do I say that?
+
+On one hand, the company has operational dashboards tracking KPIs, and GPS and timestamp data are being collected. This shows it's not Level 1 (Initial) with no data awareness.
+
+But on the other hand, although data is collected, it's not systematically analyzed. Predictive models need to be built from scratch, data is scattered across systems without a unified data warehouse. This suggests it hasn't reached Level 3 (Defined) with standard processes, let alone Level 4 (Quantitatively Managed) or Level 5 (Optimizing).
+
+3.2 Benefits of Higher Maturity
+
+If we could reach Level 4 or 5, there are several benefits:
+
+First, more scientific decision-making. Right now decisions might be based on experience or gut feeling, like the "Free Lunch" campaign. With data support, we can calculate ROI and know which users are worth investing in.
+
+Second, early problem detection. Like restaurant churn—now we have an early warning model, we can intervene early instead of panicking when we receive termination emails.
+
+Third, improved operational efficiency. After optimizing rider dispatch, saving 10 minutes per order across thousands of orders daily adds up to significant cost savings.
+
+Fourth, better user experience. On-time rate improving from 82% to 95% means fewer complaints, better App Store ratings, which naturally attracts more users and restaurants.
+
+
+4. Ethical Discussion
+
+4.1 PDPO Data Protection Principles
+
+Hong Kong's Personal Data (Privacy) Ordinance (PDPO) has six data protection principles (DPPs). Kevin's "Project God's Eye" proposal mainly involves DPP 3 and DPP 4.
+
+DPP 1 - Purpose and manner of collection: Personal data must be collected for lawful purposes and in a lawful and fair manner.
+DPP 2 - Accuracy and duration of retention: Data must be accurate and not kept longer than necessary.
+DPP 3 - Use of personal data: Personal data cannot be used for new purposes without the data subject's consent.
+DPP 4 - Security of personal data: Reasonable measures must be taken to protect personal data from unauthorized access.
+DPP 5 - Information to be generally available: Privacy policies must be published so individuals know how their data is used.
+DPP 6 - Access to and correction of personal data: Individuals have the right to access and correct their data.
+
+4.2 Privacy Issues of "Partner Insight"
+
+Honestly, Kevin's proposal has some serious problems.
+
+First, revealing users' precise locations (where they live, where they work) to restaurants clearly exceeds the original collection purpose. When users place orders, they agree to "complete delivery," not "let restaurants know your home address." This violates DPP 3.
+
+Second, information like "John Chan orders spicy noodles every Friday" is personal dietary habit data, which is sensitive personal information. If leaked, and restaurants use it to harass users, or data gets stolen by hackers, the consequences are serious. This violates DPP 4.
+
+Also, users might not even know their data is being used this way. No transparent disclosure, no consent mechanism—this violates DPP 5 and DPP 1.
+
+4.3 Compliant Design Approach
+
+If we really want to implement this feature, here's how to fix it:
+
+First, data anonymization and aggregation. Don't tell restaurants "John Chan lives at 15 Queen's Road," but say "there are 500 users in this area who prefer spicy food." Restaurants still get market trends without violating personal privacy.
+
+Second, explicit consent mechanism. Add an option in the app asking users if they're willing to share anonymized preference data with partner restaurants, default off, only counts if users actively opt in. This meets DPP 3's "consent" requirement.
+
+Third, data minimization. Only share necessary, aggregated data, not personal identities or precise addresses. For example, share "Central area lunch preferences for Japanese cuisine" rather than "Zhang San works at IFC and loves sushi."
+
+Fourth, enhanced data security. The dashboard for restaurants should have access controls, logs of who viewed what, encrypted data transmission, and regular audits. This complies with DPP 4.
+
+Fifth, transparent disclosure. Clearly state in the privacy policy how data is used, and users can withdraw consent anytime. This complies with DPP 5 and DPP 6.
+
+Actually, I think what Kevin wants can mostly be achieved with anonymized, aggregated data. Restaurants want market trends, they don't need to know specific individuals. This way we can help restaurants optimize menus and marketing while protecting user privacy—a win-win.
+
+
+5. Conclusion
+
+This proposal outlines QuickBite's data science project from business understanding to deployment. The four core problems—delivery delays, restaurant churn, coupon strategy, and rider dispatch—each have corresponding analysis methods and technical approaches.
+
+Regarding data maturity, the company is currently between Level 2-3, with data but lacking systematic analysis. After improving maturity, data-driven decision making becomes possible, problems can be detected early, and operational efficiency and user experience can be improved.
+
+On ethics, Kevin's "Project God's Eye" proposal has clear privacy risks and violates multiple PDPO principles. However, through anonymization, data aggregation, and explicit consent mechanisms, valuable market insights can be provided to restaurants while protecting user privacy.
+
+Overall, data science isn't just a technical issue—business value and ethical boundaries must also be considered. To get out of the current crisis, QuickBite needs to use data well while staying within ethical lines.
+
+
+Word Count: Approximately 1,520 words

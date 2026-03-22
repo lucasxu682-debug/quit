@@ -1,0 +1,344 @@
+================================================================================
+SCE Eats 外卖平台 - 异常处理优化代码
+================================================================================
+
+本文件包含针对数字格式异常 (NumberFormatException) 的优化代码。
+每个代码块都标明了：
+- 目标文件
+- 替换位置（行号范围）
+- 原代码问题说明
+- 优化后的代码
+
+================================================================================
+优化 1：FoodApp.java - 添加辅助方法
+================================================================================
+
+【目标文件】FoodApp.java
+【插入位置】第 43行之后（构造器和 initializeSystem 方法之间）
+【原代码问题】没有统一的输入验证方法，每次 parseInt 都可能崩溃
+
+【优化代码 - 插入到 FoodApp 类中】
+
+    /**
+     * 读取整数输入，处理 NumberFormatException
+     * 如果用户输入非数字，会提示错误并要求重新输入
+     * @param prompt 提示信息
+     * @return 用户输入的有效整数
+     */
+    private int readInt(String prompt) {
+        while (true) {  // 无限循环，直到输入正确
+            System.out.print(YELLOW + prompt + RESET);
+            try {
+                String input = scanner.nextLine().trim();
+                int value = Integer.parseInt(input);  // 尝试转换为整数
+                return value;  // 转换成功，返回数值
+            } catch (NumberFormatException e) {
+                // 捕获数字格式异常，提示用户重新输入
+                printError("输入无效，请输入有效的数字！");
+            }
+        }
+    }
+
+    /**
+     * 读取整数输入，带范围验证
+     * @param prompt 提示信息
+     * @param min 最小值
+     * @param max 最大值
+     * @return 在范围内的有效整数
+     */
+    private int readInt(String prompt, int min, int max) {
+        while (true) {
+            int value = readInt(prompt);  // 先确保是数字
+            if (value >= min && value <= max) {
+                return value;  // 在范围内，返回
+            }
+            printError("请输入 " + min + " 到 " + max + " 之间的数字！");
+        }
+    }
+
+    /**
+     * 读取小数输入，处理 NumberFormatException
+     * @param prompt 提示信息
+     * @return 用户输入的有效小数
+     */
+    private double readDouble(String prompt) {
+        while (true) {
+            System.out.print(YELLOW + prompt + RESET);
+            try {
+                String input = scanner.nextLine().trim();
+                double value = Double.parseDouble(input);  // 尝试转换为小数
+                return value;
+            } catch (NumberFormatException e) {
+                printError("输入无效，请输入有效的数字！");
+            }
+        }
+    }
+
+
+================================================================================
+优化 2：FoodApp.java - placeOrder 方法
+================================================================================
+
+【目标文件】FoodApp.java
+【替换位置】第 338-339行
+【原代码】
+                System.out.print(YELLOW + "\nSelect an item: " + RESET);
+                int itemChoice = Integer.parseInt(scanner.nextLine().trim());
+
+【优化代码】
+                int itemChoice = readInt("\nSelect an item: ");
+
+--------------------------------------------------------------------------------
+
+【目标文件】FoodApp.java
+【替换位置】第 341-342行
+【原代码】
+                System.out.print("Enter quantity: ");
+                int quantity = Integer.parseInt(scanner.nextLine().trim());
+
+【优化代码】
+                int quantity = readInt("Enter quantity: ");
+
+
+================================================================================
+优化 3：FoodApp.java - browseRestaurants 方法
+================================================================================
+
+【目标文件】FoodApp.java
+【替换位置】第 255-262行
+【原代码】
+        System.out.print(YELLOW + "\nSelect a restaurant (0 to cancel): " + RESET);
+        try {
+            int choice = Integer.parseInt(scanner.nextLine().trim());
+            if (choice > 0 && choice <= restaurants.size()) {
+                Restaurant selected = restaurants.get(choice - 1);
+                browseMenu(selected);
+            }
+        } catch (NumberFormatException e) {
+            printError("Invalid input.");
+            waitForEnter();
+        }
+
+【优化代码】
+        int choice = readInt("\nSelect a restaurant (0 to cancel): ");
+        if (choice > 0 && choice <= restaurants.size()) {
+            Restaurant selected = restaurants.get(choice - 1);
+            browseMenu(selected);
+        }
+
+【说明】原代码已经有 try-catch，但用 readInt 更简洁，不需要重复写异常处理
+
+
+================================================================================
+优化 4：FoodApp.java - browseMenu 方法
+================================================================================
+
+【目标文件】FoodApp.java
+【替换位置】第 295-302行
+【原代码】
+                System.out.print(YELLOW + "Select item number to favourite: " + RESET);
+                try {
+                    int itemChoice = Integer.parseInt(scanner.nextLine().trim());
+                    if (itemChoice > 0 && itemChoice <= items.size()) {
+                        customer.addFavouriteItem(items.get(itemChoice - 1));
+                        printSuccess(items.get(itemChoice - 1).getName() + " added to favourites!");
+                        waitForEnter();
+                    }
+                } catch (NumberFormatException e) {
+                    printError("Invalid input.");
+                    waitForEnter();
+                }
+
+【优化代码】
+                int itemChoice = readInt("Select item number to favourite: ");
+                if (itemChoice > 0 && itemChoice <= items.size()) {
+                    customer.addFavouriteItem(items.get(itemChoice - 1));
+                    printSuccess(items.get(itemChoice - 1).getName() + " added to favourites!");
+                    waitForEnter();
+                }
+
+
+================================================================================
+优化 5：FoodApp.java - viewFavouriteRestaurants 方法
+================================================================================
+
+【目标文件】FoodApp.java
+【替换位置】第 317-325行
+【原代码】
+        System.out.print(YELLOW + "\nSelect a restaurant to view (0 to cancel): " + RESET);
+        try {
+            int choice = Integer.parseInt(scanner.nextLine().trim());
+            if (choice > 0 && choice <= favs.size()) {
+                browseMenu(favs.get(choice - 1));
+            }
+        } catch (NumberFormatException e) {
+            printError("Invalid input.");
+            waitForEnter();
+        }
+
+【优化代码】
+        int choice = readInt("\nSelect a restaurant to view (0 to cancel): ");
+        if (choice > 0 && choice <= favs.size()) {
+            browseMenu(favs.get(choice - 1));
+        }
+
+
+================================================================================
+优化 6：FoodApp.java - searchAndFilter 方法
+================================================================================
+
+【目标文件】FoodApp.java
+【替换位置】第 357-365行
+【原代码】
+                System.out.print(YELLOW + "\nSelect a restaurant to view (0 to cancel): " + RESET);
+                try {
+                    int rChoice = Integer.parseInt(scanner.nextLine().trim());
+                    if (rChoice > 0 && rChoice <= results.size()) {
+                        browseMenu(results.get(rChoice - 1));
+                    }
+                } catch (NumberFormatException e) {
+                    printError("Invalid input.");
+                    waitForEnter();
+                }
+
+【优化代码】
+                int rChoice = readInt("\nSelect a restaurant to view (0 to cancel): ");
+                if (rChoice > 0 && rChoice <= results.size()) {
+                    browseMenu(results.get(rChoice - 1));
+                }
+
+--------------------------------------------------------------------------------
+
+【目标文件】FoodApp.java
+【替换位置】第 368-377行
+【原代码】
+                System.out.print(YELLOW + "\nSelect a restaurant: " + RESET);
+                try {
+                    int rChoice = Integer.parseInt(scanner.nextLine().trim());
+                    if (rChoice > 0 && rChoice <= restaurants.size()) {
+                        Restaurant r = restaurants.get(rChoice - 1);
+                        System.out.print("Enter max price: $");
+                        double maxPrice = Double.parseDouble(scanner.nextLine().trim());
+                        List<MenuItem> filtered = r.getMenu().filterItemsByMaxPrice(maxPrice);
+                        System.out.println("\nItems under $" + maxPrice + ":");
+                        for (MenuItem item : filtered) {
+                            if (item.isAvailable()) {
+                                System.out.println("- " + item.getName() + " ($" + item.getPrice() + ")");
+                            }
+                        }
+                        waitForEnter();
+                    }
+                } catch (NumberFormatException e) {
+                    printError("Invalid input.");
+                    waitForEnter();
+                }
+
+【优化代码】
+                int rChoice = readInt("\nSelect a restaurant: ");
+                if (rChoice > 0 && rChoice <= restaurants.size()) {
+                    Restaurant r = restaurants.get(rChoice - 1);
+                    double maxPrice = readDouble("Enter max price: $");
+                    List<MenuItem> filtered = r.getMenu().filterItemsByMaxPrice(maxPrice);
+                    System.out.println("\nItems under $" + maxPrice + ":");
+                    for (MenuItem item : filtered) {
+                        if (item.isAvailable()) {
+                            System.out.println("- " + item.getName() + " ($" + item.getPrice() + ")");
+                        }
+                    }
+                    waitForEnter();
+                }
+
+
+================================================================================
+优化 7：FoodApp.java - manageMenuItems 方法
+================================================================================
+
+【目标文件】FoodApp.java
+【替换位置】第 417-421行
+【原代码】
+            System.out.print("Price: ");
+            double price = Double.parseDouble(scanner.nextLine().trim());
+            System.out.print("Preparation Time (mins): ");
+            int prepTime = Integer.parseInt(scanner.nextLine().trim());
+
+【优化代码】
+            double price = readDouble("Price: ");
+            int prepTime = readInt("Preparation Time (mins): ");
+
+
+================================================================================
+优化 8：FoodApp.java - acceptDelivery 方法
+================================================================================
+
+【目标文件】FoodApp.java
+【替换位置】第 476-485行
+【原代码】
+        System.out.print(YELLOW + "\nSelect delivery (0 to cancel): " + RESET);
+        try {
+            int choice = Integer.parseInt(scanner.nextLine().trim());
+            if (choice > 0 && choice <= readyOrders.size()) {
+                Order order = readyOrders.get(choice - 1);
+                rider.acceptDelivery(order);
+                systemManager.markRiderUnavailable(rider);
+                printSuccess("Delivery accepted! Heading to " + order.getDeliveryAddress());
+            }
+        } catch (NumberFormatException e) {
+            printError("Invalid input.");
+        }
+
+【优化代码】
+        int choice = readInt("\nSelect delivery (0 to cancel): ");
+        if (choice > 0 && choice <= readyOrders.size()) {
+            Order order = readyOrders.get(choice - 1);
+            rider.acceptDelivery(order);
+            systemManager.markRiderUnavailable(rider);
+            printSuccess("Delivery accepted! Heading to " + order.getDeliveryAddress());
+        }
+
+
+================================================================================
+优化 9：FoodApp.java - completeDelivery 方法
+================================================================================
+
+【目标文件】FoodApp.java
+【替换位置】第 499-508行
+【原代码】
+        System.out.print(YELLOW + "Rate this delivery (1-5): " + RESET);
+        try {
+            int rating = Integer.parseInt(scanner.nextLine().trim());
+            order.setDeliveryRating(rating);
+            order.getRestaurant().addRating(rating);
+            rider.completeDelivery();
+            systemManager.markRiderAvailable(rider);
+            printSuccess("Delivery completed! Thank you for your service.");
+        } catch (NumberFormatException e) {
+            printError("Invalid rating.");
+        }
+
+【优化代码】
+        int rating = readInt("Rate this delivery (1-5): ", 1, 5);
+        order.setDeliveryRating(rating);
+        order.getRestaurant().addRating(rating);
+        rider.completeDelivery();
+        systemManager.markRiderAvailable(rider);
+        printSuccess("Delivery completed! Thank you for your service.");
+
+【说明】这里用了带范围的 readInt，确保评分在 1-5 之间
+
+
+================================================================================
+总结
+================================================================================
+
+优化内容：
+1. 添加了 3 个辅助方法：readInt(String)、readInt(String, int, int)、readDouble(String)
+2. 替换了 9 处可能抛出 NumberFormatException 的代码
+3. 程序不会因为用户输入非数字而崩溃
+4. 代码更简洁，不需要重复写 try-catch
+
+使用方法：
+1. 首先将优化 1 的代码插入到 FoodApp.java 第 43行之后
+2. 然后按照顺序替换其他位置的代码
+3. 编译运行，测试输入非数字时的效果
+
+================================================================================

@@ -1,0 +1,34 @@
+{
+  "backup_policy": {
+    "auto_backup_on": [
+      "skill_install",
+      "skill_update", 
+      "gateway_restart",
+      "config_change",
+      "before_major_edit"
+    ],
+    "retention": {
+      "daily_backups": 7,
+      "weekly_backups": 4,
+      "monthly_backups": 12
+    },
+    "max_total_backups": 50,
+    "cleanup_schedule": "0 2 * * *"
+  },
+  "rollback_policy": {
+    "auto_rollback_on": [
+      "skill_install_failure",
+      "gateway_start_failure",
+      "config_corruption"
+    ],
+    "prompt_before_rollback": true
+  },
+  "monitored_files": [
+    "skills/*/SKILL.md",
+    "config/*.json",
+    ".openclaw/*.json",
+    "AGENTS.md",
+    "SOUL.md",
+    "TOOLS.md"
+  ]
+}

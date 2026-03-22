@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx -y @modelcontextprotocol/server-filesystem C:/Users/xumou/quit"
+    },
+    "github": {
+      "command": "npx -y @modelcontextprotocol/server-github",
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": ""
+      }
+    },
+    "sqlite": {
+      "command": "npx -y @modelcontextprotocol/server-sqlite C:/Users/xumou/quit/data/database.db"
+    },
+    "tavily": {
+      "command": "npx -y tavily-mcp",
+      "env": {
+        "TAVILY_API_KEY": "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"
+      }
+    },
+    "puppeteer": {
+      "command": "npx -y @modelcontextprotocol/server-puppeteer"
+    }
+  },
+  "imports": []
+}
