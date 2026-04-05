@@ -30,6 +30,24 @@ You wake up fresh each session. These files are your continuity:
 
 Capture what matters. Decisions, context, things to remember. Skip the secrets unless asked to keep them.
 
+### 📝 Conversation Archive — Before Ending a Session
+
+**IMPORTANT — Before the session ends, call save:**
+
+When the conversation has been substantive (non-trivial questions, decisions made, files modified, preferences expressed), execute:
+
+```powershell
+powershell -File memory/conversations/chat-memory.ps1 -Action save -Summary "..." -Topics "topic1,topic2" -Decisions "decision1,decision2" -FilesModified "file1.md,file2.md"
+```
+
+Key parameters:
+- `-Summary`: 1-2 sentence summary of what happened in the conversation
+- `-Topics`: comma-separated list of main topics discussed
+- `-Decisions`: any decisions or commitments made during the conversation
+- `-FilesModified`: any files created or modified as a result
+
+If the conversation was trivial (one-off questions, no decisions), skip the save.
+
 ### 🧠 MEMORY.md - Your Long-Term Memory
 
 - **ONLY load in main session** (direct chats with your human)

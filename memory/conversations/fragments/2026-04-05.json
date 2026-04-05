@@ -1,0 +1,31 @@
+﻿{
+    "lastUpdated":  "2026-04-05 15:11",
+    "fragments":  [
+                      {
+                          "confidence":  "high",
+                          "timestamp":  "2026-04-05 14:48",
+                          "id":  "0dc5a9f1-f482-4742-9839-3037b030966d",
+                          "source":  "auto",
+                          "mainContext":  "毛囊炎补剂方案 → 突然问：肠-皮轴",
+                          "content":  "肠-皮轴这个概念挺有意思的",
+                          "topics":  [
+                                         "肠-皮轴",
+                                         "新概念",
+                                         "毛囊炎"
+                                     ],
+                          "promoted":  false
+                      },
+                      {
+                          "confidence":  "high",
+                          "timestamp":  "2026-04-05 15:11",
+                          "id":  "ad3dc67b-03b8-48de-9de7-95e5a001c7ca",
+                          "source":  "auto",
+                          "mainContext":  "测试 → 测试碎片",
+                          "content":  "测试碎片内容",
+                          "topics":  [
+                                         "测试"
+                                     ],
+                          "promoted":  false
+                      }
+                  ]
+}

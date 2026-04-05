@@ -1,0 +1,376 @@
+Higher Diploma in Data Science (Semester 2, AY2025/26)
+
+Statistics for Data Science (HDDS1502)
+
+Hypothesis Testing
+
+Continuing and Professional Education Division (CPED)
+
+School of Continuing Education (SCE)
+
+Hong Kong Baptist University (HKBU)
+
+Table of Contents
+
+1.Basics of Hypothesis Testing (假說檢定)
+
+2. Significance Levels (顯著水平) and Decision-Making
+
+3. Hypothesis testing with one population mean
+
+4. Two Samples vs. One Sample
+
+Basics of Hypothesis Testing
+
+About Hypothesis Testing
+
+3
+
+Hypothesis
+
+說法
+
+Null hypothesis 虛無假說
+
+對立假說
+
+4
+
+Null Hypothesis
+
+虛無假說
+
+5
+
+Null Hypothesis
+
+6
+
+Alternative Hypothesis
+
+對立假說
+
+7
+
+8
+
+The Six Steps of Conducting a Hypothesis Testing
+
+9
+
+The Six Steps of Conducting a Hypothesis Testing (Cont’d)
+
+10
+
+The Decision Process
+
+11
+
+Significance Levels (顯著水平) and
+Decision-Making
+
+臨界值
+
+Risks in Decision Making Using Hypothesis Testing
+
+Type I Error
+
+Type II Error
+
+Example:
+
+Ho: You are not pregnant
+H1: You are pregnant
+
+Ho is true, 
+but we reject it 
+
+Ho is false, 
+but we accept it !
+
+Hypothesis testing with one
+population mean
+
+Test Type
+
+Z-Test or T-Test?
+
+One-tailed or Two-tailed Test?
+
+ZSTAT = STANDARDIZE(5.83,6,0.0707) = -2.40
+
+P-value = NORM.DIST(5.83,6,0.0707,TRUE) = 0.0082
+
+OR
+
+P-value = NORM.S.DIST(-2.4,TRUE) = 0.0082
+
+Negative Z Table
+
+Positive Z Table
+
+Hypothesis testing for the mean: σ unknown
+
+• If the population standard deviation is unknown, we instead use
+
+the sample standard deviation S.
+
+• Because of this change, we use the T distribution instead of the
+
+Z distribution to test the null hypothesis about the mean.
+
+• When using the T-distribution we must assume the population 
+
+you are sampling from follows a normal distribution.
+
+• All other steps, concepts, and conclusions are the same.
+
+t-test for the population mean (σ unknown)
+
+Example of Two-tail Test
+
+T = T.INV.2T(0.05,24) = ± 2.0639
+
+• Degrees of freedom自由度(df) refers to the number of independent values or 
+
+quantities that can vary in an analysis without breaking any constraints.
+
+•
+
+E.g. Imagine you’re at a pizza party with 4 friends, and there are 4 slices to 
+share. 
+By the time the last friend goes, they have no choice—only one slice is left!
+Degrees of freedom (df) = 3 (which is n - 1 = 4 – 3, where n is sample size). 
+
+Normal Distribution Assumption
+
+• As long as the sample size is not very small and the population 
+
+is not very skewed, the t-test can be used.
+
+• To evaluate the normality assumption:
+
+• Determine how closely sample statistics match the normal
+
+distribution’s theoretical properties.
+
+• Construct a histogram or stem-and-leaf display or boxplot or a
+
+normal probability plot.
+
+Connection of Two-tail Test to Confidence Interval
+
+A confidence interval ( 信 賴 區 間 ) is the mean of the estimate plus
+and minus the variation, the range of values fall between certain level
+is another way to describe
+in statistics,
+of confidence. Confidence,
+probability.
+
+T-test Example (One-tail)
+
+Solution
+
+Critical Value Approach – One-Tail t-Test for the Mean
+
+• Step 1: define the null and alternative hypotheses:
+
+H0 : µ ≤ 6.03
+H1 : µ > 6.03
+
+• Step 2: Collect the data from a sample of n = 50. You decide to
+
+use α = 0.01.
+
+• Step 3: Because α is unknown, you use the t distribution and the
+
+tSTAT test statistic.
+
+Solution (Cont’d)
+
+Critical Value Approach – One-Tail t-Test for the Mean
+
+• Step 4: The rejection region is entirely contained in the upper 
+
+tail of the sampling distribution of the mean because you want 
+to reject H0 only when the sample mean is significantly greater 
+than 6.03 ounces. The decision rule should be:
+
+reject H0 if tSTAT > 2.4049; otherwise, do not reject H0.
+
+Because the entire rejection region is in the upper tail of the t
+distribution and contains an area of 0.01, the critical value of the t
+distribution with 50 - 1 = 49 degrees of freedom (df=49) is 2.4049.
+
+T = T.INV(0.99,49) =  2.4049
+
+Solution (Cont’d)
+
+Critical Value Approach – One-Tail t-Test for the Mean
+
+• Step 5: From your sample of 50 chocolate bars, you find that the
+sample mean weight is 6.034 ounces, and the sample standard 
+deviation is 0.02 ounces. Using n = 50, X = 6.034, S = 0.02,
+tSTAT = (X − µ)/(S/√ n) = (6.034 − 6.03)/(0.02/√50) = 1.414
+
+• Because tSTAT = 1.414 < 2.4049, you do not reject the null 
+
+hypothesis. There is insufficient evidence to conclude that the
+population mean weight is greater than 6.03 ounces.
+
+Two Sample vs. One Sample
+
+Two Sample vs. One Sample Tests
+
+Two Sample t-Test
+
+A two sample t-test is used to determine whether or not two
+population means are equal.
+
+H0 : µ1 = µ2,
+
+H1 : µ1 > µ2, or H1 : µ1 < µ2, or H1 : µ1≠µ2
+
+Reduce two sample to one sample t test
+
+• One additional step: Reduce to one-sample problem.
+
+H0 : µ0 = µ1 −µ2 = 0,
+H1 : µ0 > 0, or H1 : µ0 < 0, or H1 : µ0 ≠ 0
+
+• Follow five other steps in one sample t test.
+
+Example:
+The table below shows the before and after weights (in pounds) of 6 adults
+after a diet. Test whether there is evidence that the diet is effective.
+
+Before
+After
+
+125
+105
+
+110
+103
+
+139
+115
+
+144
+126
+
+98
+100
+
+150
+136
+
+Solution: reduce two sample to one sample t test
+
+• One additional step: Reduce to one-sample problem.
+
+Difference = Weight after the diet – Weight before the diet
+
+Before
+After
+Difference
+
+• Step 1:
+
+125
+105
+-20
+
+110
+103
+-7
+
+139
+115
+-24
+
+144
+126
+-18
+
+98
+100
+2
+
+150
+136
+-14
+
+H0 : µ0 = µ1 −µ2 = 0,
+H1 : µ0 < 0
+
+• Step 2: Collect the data from a sample of n = 6.
+
+Use α = 0.05.
+Critical value: =T.INV(0.05, 5) = -2.01504
+
+Solution: reduce two sample to one sample t test
+
+• Step 3: Because pop var is unknown, use the t distribution
+
+and find the tSTAT test statistic.
+
+Difference = d
+d - mean
+(d - mean)^2
+
+-20
+-6.5
+42.25
+
+-7
+6.5
+42.25
+
+-24
+-10.5
+110.25
+
+-18
+-4.5
+
+2
+15.5
+20.25 240.25
+
+-14
+-0.5
+0.25
+
+Mean = -13.5
+
+Total = 455.5
+
+• Sample variance = 455.5 / 5 = 91.1; s.d. = √ 91.1 = 9.5446
+
+• tSTAT = mean diff /(S / √n) = -13.5/(9.5446/√6) = -3.46458
+
+• Step 4: The decision rule should be:
+
+reject H0 if tSTAT < -2.01504;
+
+otherwise, do not reject H0 at 5% significant level.
+
+Solution: reduce two sample to one sample t test
+
+• Step 5: Conclusion
+
+Since tSTAT = -3.46458 < -2.01504, we reject the null 
+hypothesis. There is sufficient evidence to conclude that the
+diet is effective in losing weight.
+
+Courtesy
+
+• Berenson, M.L., Levine, D., Szabat, K. & Stephan, D. (2024). Basic 
+business statistics: concepts and applications (15th ed.). Pearson.
+
+• Mr. Chui Kwok-ming Eric’s course discussions.
+
+Any Questions?
+
+

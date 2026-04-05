@@ -1,0 +1,23 @@
+﻿{
+    "entries":  [
+                    {
+                        "timestamp":  "2026-04-04 20:48",
+                        "model":  "mini-max/M2",
+                        "filesModified":  [
+                                              "MEMORY.md",
+                                              "chat-memory.ps1"
+                                          ],
+                        "topics":  [
+                                       "OpenClaw上下文管理",
+                                       "chat-memory dump功能",
+                                       "定时提醒Cron",
+                                       "计划提出规则"
+                                   ],
+                        "summary":  "解决OpenClaw上下文报错问题（auto-compact正常运作）；修复chat-memory.ps1并添加dump功能；建立每3小时chat-memory提醒Cron；发现并记录\u0027先判断可行性再提出方案\u0027的规则；讨论了compact与chat-memory的区别与互补关系",
+                        "decisions":  [
+                                          "chat-memory dump功能无需定时自动，改为每3小时提醒+手动dump；compact和chat-memory互补，两者互不替代"
+                                      ]
+                    }
+                ],
+    "lastUpdated":  "2026-04-04 20:48"
+}

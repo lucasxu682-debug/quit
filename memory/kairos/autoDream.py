@@ -1,0 +1,169 @@
+#!/usr/bin/env python3
+"""
+KAIROS autoDream.py — 凌晨记忆整理脚本
+每天凌晨 06:00 自动运行，读取过去 24 小时的 observation log，生成摘要并更新 MEMORY.md
+"""
+
+import argparse
+from pathlib import Path
+from datetime import datetime, timedelta
+import re
+
+
+def get_yesterday_date():
+    """获取昨天的日期字符串"""
+    yesterday = datetime.now() - timedelta(days=1)
+    return yesterday.strftime("%Y-%m-%d")
+
+
+def read_observation_log(obs_dir: Path, date_str: str) -> str | None:
+    """读取指定日期的 observation log"""
+    obs_file = obs_dir / f"{date_str}.md"
+    if not obs_file.exists():
+        return None
+    return obs_file.read_text(encoding="utf-8")
+
+
+def parse_heartbeats(content: str) -> dict:
+    """解析 observation log 内容，提取 heartbeat 信息"""
+    # 统计 heartbeat 出现次数
+    heartbeat_count = content.count("### heartbeat")
+    
+    # 统计 action-queue 处理次数
+    action_queue_count = content.count("检查了 action-queue")
+    
+    # 提取主要活动（从 "本次心跳类型" 行）
+    activity_types = re.findall(r"本次心跳类型：(.+)", content)
+    
+    # 提取值得记录的事项
+    notable_items = []
+    
+    # 从 "今日状态汇总" 中提取信息
+    summary_match = re.search(r"### 今日状态汇总\n(.+)", content, re.DOTALL)
+    if summary_match:
+        notable_items.append(summary_match.group(1).strip())
+    
+    # 从 "判断结果" 中提取主动行动
+    actions = re.findall(r"- 无主动行动|- 执行了[^:]+|- 回复 HEARTBEAT_OK", content)
+    
+    return {
+        "heartbeat_count": heartbeat_count,
+        "action_queue_count": action_queue_count,
+        "activity_types": activity_types,
+        "notable_items": notable_items,
+        "actions": actions
+    }
+
+
+def generate_summary(date_str: str, data: dict) -> str:
+    """生成摘要报告"""
+    heartbeat_count = data["heartbeat_count"]
+    action_queue_count = data["action_queue_count"]
+    
+    # 确定主要活动
+    activity_types = data["activity_types"]
+    main_activity = activity_types[0] if activity_types else "日常检查"
+    
+    # 确定备注
+    notable = data["notable_items"]
+    notes = "无异常"
+    if notable:
+        # 取第一行简要描述
+        first_note = notable[0].split("\n")[0][:50]
+        if len(notable[0]) > 50:
+            first_note += "..."
+        notes = first_note
+    
+    summary = f"""===== KAIROS autoDream — {date_str} =====
+心跳次数：{heartbeat_count}
+待办处理：{action_queue_count}
+主要活动：{main_activity}
+备注：{notes}
+"""
+    return summary
+
+
+def update_memory(memory_path: Path, date_str: str, data: dict):
+    """更新 MEMORY.md 文件"""
+    # 准备要追加的内容
+    content_lines = [f"### {date_str}"]
+    
+    # 添加主要活动
+    if data["activity_types"]:
+        content_lines.append(f"- 主要活动：{data['activity_types'][0]}")
+    
+    # 添加值得记录的事项
+    if data["notable_items"]:
+        for item in data["notable_items"]:
+            # 取前两行作为摘要
+            lines = item.strip().split("\n")[:2]
+            for line in lines:
+                if line.strip():
+                    content_lines.append(f"- {line.strip()}")
+    
+    # 如果没有特别的事项，添加默认记录
+    if len(content_lines) == 1:
+        content_lines.append(f"- 心跳次数：{data['heartbeat_count']}，待办处理：{data['action_queue_count']}")
+    
+    content_lines.append("")  # 空行
+    
+    new_content = "\n".join(content_lines)
+    
+    # 检查文件是否存在
+    if memory_path.exists():
+        existing_content = memory_path.read_text(encoding="utf-8")
+        # 检查是否已经存在今天的记录
+        if f"### {date_str}" in existing_content:
+            return  # 已存在，跳过
+        # 追加新内容
+        updated_content = existing_content.rstrip() + "\n\n" + new_content
+    else:
+        # 创建新文件
+        updated_content = f"""# KAIROS 记忆库
+
+## KAIROS 项目进度
+
+{new_content}
+"""
+    
+    memory_path.write_text(updated_content, encoding="utf-8")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="KAIROS 凌晨记忆整理脚本")
+    parser.add_argument("--date", help="指定日期 (YYYY-MM-DD)，默认为昨天")
+    args = parser.parse_args()
+    
+    # 确定要处理的日期
+    if args.date:
+        date_str = args.date
+    else:
+        date_str = get_yesterday_date()
+    
+    # 获取脚本所在目录
+    script_dir = Path(__file__).parent
+    obs_dir = script_dir / "observations"
+    memory_path = script_dir / "MEMORY.md"
+    
+    # 读取 observation log
+    content = read_observation_log(obs_dir, date_str)
+    
+    if content is None:
+        print(f"昨日无记录 (observations/{date_str}.md 不存在)")
+        return
+    
+    # 解析内容
+    data = parse_heartbeats(content)
+    
+    # 生成并打印摘要
+    summary = generate_summary(date_str, data)
+    print(summary)
+    
+    # 更新 MEMORY.md
+    update_memory(memory_path, date_str, data)
+    
+    print(f"MEMORY.md 已更新")
+
+
+if __name__ == "__main__":
+    main()

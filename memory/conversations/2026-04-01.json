@@ -1,0 +1,39 @@
+{
+  "lastUpdated": "2026-04-01 13:00",
+  "entries": [
+    {
+      "timestamp": "2026-04-01 10:31-12:57",
+      "summary": "Set up Tencent Cloud Singapore server (43.160.218.220) with SSH hardening, Docker, and gost HTTP proxy for GFW bypass",
+      "topics": [
+        "Tencent Cloud Singapore server setup",
+        "SSH hardening (port 22022, key-only auth)",
+        "ufw firewall configuration",
+        "fail2ban installation",
+        "Docker installation",
+        "3x-ui installation (database issue, not fully resolved)",
+        "gost HTTP proxy (success, port 15430)",
+        "V2rayN client configuration",
+        "GFW bypass successful"
+      ],
+      "decisions": [
+        "Using gost HTTP proxy (port 15430) instead of VLESS",
+        "3x-ui panel kept but not fully used due to empty database",
+        "gost set with --restart=always for auto-start"
+      ],
+      "filesModified": [
+        "TOOLS.md",
+        "memory/singapore-server-guide.md",
+        "memory/2026-04-01.md",
+        "__skills__/chat-memory/"
+      ],
+      "server": {
+        "ip": "43.160.218.220",
+        "sshPort": 22022,
+        "proxyPort": 15430,
+        "sshCommand": "ssh root@43.160.218.220 -p 22022",
+        "proxyAddress": "http://43.160.218.220:15430",
+        "panelUrl": "https://43.160.218.220:61153/pHgce0yS6aqIWsO2Ek"
+      }
+    }
+  ]
+}
