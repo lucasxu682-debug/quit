@@ -19,6 +19,7 @@ description: >
 | **project** | 项目讨论 | `1489162462149349426` |
 | **email** | 邮件通知汇总 | `1489233513554247831` |
 | **grp-prj** | 小组项目 | `1489253444626813049` |
+| **常规** | 综合杂谈 | `1407234849445642273` |
 
 > Server Guild ID: `1407234849445642270`
 
@@ -72,6 +73,19 @@ message(action=pin, channel=discord, target="ChannelID", messageId="MessageID")
 - **weekly-report** — 每周一 AI 综合报告（GitHub/论文/实习/政治）
 - **project** — 具体项目讨论
 - **grp-prj** — 小组作业相关
+
+## 频道详情备忘
+
+### email 频道
+- `calendar@hkbu.edu.hk` 的每日 today 邮件会被**自动屏蔽**
+- 重要邮件会附上简短分析和建议
+- 由 cron job（每72小时）触发，bot 用户名：`OpenClaw Email Summary`
+
+### grp-prj 频道
+**当前活跃项目：HDDS1502 统计小组项目**
+- 截止：2026-04-09（占比 35%）
+- 任务：MTR (0066.HK) vs Tracker Fund (2800.HK) — 描述性统计 + 相关系数 + 线性回归
+- 组员：Ho Yu Ting / Au Hasting / Chan Pak Hei / Lucas
 
 ## 注意
 
