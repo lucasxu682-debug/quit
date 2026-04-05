@@ -17,10 +17,12 @@ STOCKS = {
 INDEX = "^HSI"  # 恒生指数
 DISCORD_CHANNEL = "channel:1500327713228550276"
 
-# ========== 持仓数据（来自 USER.md）==========
+# ========== 持仓数据（来自 USER.md + 实际亏损率）==========
+# 注：Yahoo Finance 港股数据存在较大误差，使用实际亏损率计算
+# 盈亏数据来源：用户实际操作账户
 POSITIONS = {
-    "01347": {"name": "华虹半导体", "shares": 1000, "cost": 99.987},
-    "03993": {"name": "洛阳钼业", "shares": 6000, "cost": 20.361},
+    "01347": {"name": "华虹半导体", "shares": 1000, "cost": 99.987, "loss_pct": -20.64},
+    "03993": {"name": "洛阳钼业", "shares": 6000, "cost": 20.361, "loss_pct": -16.70},
 }
 
 # ========== Yahoo Finance API ==========
@@ -122,30 +124,26 @@ def generate_report(stock_data: dict, news: list[dict], index_data: dict | None)
     total_value = 0
     total_unrealized_pnl = 0
 
-    lines.append("**【持仓盈亏】**")
+    lines.append("**【持仓盈亏】（数据来源：用户实际操作账户）**")
     for sym, pos in POSITIONS.items():
-        sd = stock_data.get(sym)
-        if not sd:
-            continue
-        cur = sd["current_price"]
+        loss_pct = pos.get("loss_pct", 0)
         cost_total = pos["shares"] * pos["cost"]
-        value = pos["shares"] * cur
+        value = cost_total * (1 + loss_pct / 100)
         pnl = value - cost_total
-        pnl_pct = pnl / cost_total * 100
         total_value += value
         total_unrealized_pnl += pnl
         emoji = "📈" if pnl >= 0 else "📉"
         lines.append(f"{emoji} {pos['name']} ({sym}.HK)")
         lines.append(f"   持仓成本：HKD {cost_total:,.2f}（{pos['cost']} × {pos['shares']}股）")
-        lines.append(f"   当前价值：HKD {value:,.2f}（{cur:.2f} × {pos['shares']}股）")
-        lines.append(f"   浮亏：HKD {pnl:,.2f}（{pnl_pct:.1f}%）")
-        lines.append(f"   买入价 vs 现价：{pos['cost']} → {cur:.2f}，{'+' if cur >= pos['cost'] else ''}{(cur-pos['cost'])/pos['cost']*100:.1f}%")
+        lines.append(f"   当前价值：HKD {value:,.2f}")
+        lines.append(f"   浮亏：HKD {pnl:,.2f}（{loss_pct:.2f}%）")
+        lines.append(f"   买入价 vs 现价：{pos['cost']} → {value/pos['shares']:.2f}，{loss_pct:.2f}%")
         lines.append("")
 
     total_pnl_pct = total_unrealized_pnl / total_cost * 100
     lines.append(f"📌 合计成本：HKD {total_cost:,.2f}")
     lines.append(f"📌 合计当前价值：HKD {total_value:,.2f}")
-    lines.append(f"📌 合计浮亏：HKD {total_unrealized_pnl:,.2f}（{total_pnl_pct:.1f}%）")
+    lines.append(f"📌 合计浮亏：HKD {total_unrealized_pnl:,.2f}（{total_pnl_pct:.2f}%）")
     lines.append("")
 
     # ---- 个股详情 ----
@@ -237,11 +235,11 @@ def main():
     if index_data:
         print(f"[stock] ^HSI OK: {index_data['current_price']:.2f}")
 
-    if not stock_data:
-        print("[stock] 所有股票数据获取失败，退出")
+    if not stock_data and not POSITIONS:
+        print("[stock] 所有数据获取失败，退出")
         return
 
-    # 生成报告
+    # 生成报告（即使股价获取失败，持仓数据仍可显示）
     report = generate_report(stock_data, news, index_data)
     print("\n" + "="*50)
     print(report)
