@@ -92,3 +92,9 @@ message(action=pin, channel=discord, target="ChannelID", messageId="MessageID")
 - 心跳/告警在 Discord 没有可靠的主动推送机制（待解决）
 - 频道 ID 从 channel-list 获取，或从 MEMORY.md 查询
 - 所有任务完成/取消/新增都应更新 to-do-list
+
+## deliveryStatus 状态说明
+
+cron job 的 `deliveryStatus: unknown` **不代表 Discord 消息发送失败**。这是 OpenClaw 内部报告字段，表示"向 cron 系统本身报告的状态未知"。实际消息是否送达应以 Discord 频道里是否出现为准。
+
+**判断消息是否真正发出的方法：去对应频道查看，不要依赖 deliveryStatus 字段。**

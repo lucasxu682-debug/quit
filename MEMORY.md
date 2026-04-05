@@ -147,9 +147,11 @@ savefragment / searchfragments / loadrecent / cleanupfragments / removefragment 
 
 ## 任务进度监控系统
 - 进度文件：memory/kairos/progress.json
-- Cron Job：每3分钟检查一次（ID: a01d31b1）
+- Cron Job：每3分钟检查一次（ID: 399c0bc0）
 - 检测逻辑：status=running + lastUpdated 超过3分钟 → 发送 Discord 告警
-- ⚠️ isolated session 发 Discord 消息有格式限制，待修复
+- ✅ target 格式：`channel:1490258439220236349`（带前缀）
+- ✅ timeoutSeconds: 60（防止超时）
+- ⚠️ deliveryStatus: unknown 不代表 Discord 消息失败，以频道实际出现为准
 
 ## 腾讯云新加坡服务器
 - IP: 43.160.218.220，SSH: 22022，代理: 15430
