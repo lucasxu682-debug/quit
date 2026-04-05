@@ -160,11 +160,12 @@ savefragment / searchfragments / loadrecent / cleanupfragments / removefragment 
 
 ## 港股每日追踪系统
 - 脚本：memory/kairos/stock_tracker.py
-- Cron：每天 09:30 HKT（周一至周五，ID: a8c91f52）
+- Cron：每天 16:30 HKT（周一至周五，ID: da2c28dc）
 - 频道：Discord hk-stock（ID: 1490272018850123917）
 - 持仓：01347.HK 华虹（成本 99.987×1000）/ 03993.HK 洛阳钼业（成本 20.361×6000）
-- 报告内容：持仓盈亏 + 涨跌 + 成交量 + 影响因素 + 恒生指数 + 术语解释
-- ⚠️ 数据来源 Yahoo Finance可能有延迟，以实际账户为准
+- 数据源：东方财富（港股）/ Yahoo Finance（恒生指数）/ 沪深300
+- 报告内容：持仓盈亏 + 个股分析（含信号）+ 大盘情绪 + 行业描述 + 术语解释
+- ⚠️ 新闻/公告：东方财富 API 改版暂不可用，标注"定期公告"提示手动查看
 
 ## 待完成项目（锦上添花）
 - ✅ autoDream.py（凌晨记忆整理脚本）
