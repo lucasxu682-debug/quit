@@ -8,6 +8,7 @@ import argparse
 from pathlib import Path
 from datetime import datetime, timedelta
 import re
+import json
 
 
 def get_yesterday_date():
@@ -55,7 +56,28 @@ def parse_heartbeats(content: str) -> dict:
     }
 
 
-def generate_summary(date_str: str, data: dict) -> str:
+def read_recent_fragments(fragments_dir: Path, days: int = 3) -> list:
+    """读取最近N天的碎片存档"""
+    if not fragments_dir.exists():
+        return []
+    
+    fragments = []
+    now = datetime.now()
+    for i in range(days):
+        date = now - timedelta(days=i)
+        frag_file = fragments_dir / f"{date.strftime('%Y-%m-%d')}.json"
+        if frag_file.exists():
+            try:
+                data = json.loads(frag_file.read_text(encoding="utf-8"))
+                for frag in data.get("fragments", []):
+                    frag["_date"] = date.strftime("%m-%d")
+                    fragments.append(frag)
+            except (json.JSONDecodeError, KeyError):
+                continue
+    return fragments
+
+
+def generate_summary(date_str: str, data: dict, fragments: list) -> str:
     """生成摘要报告"""
     heartbeat_count = data["heartbeat_count"]
     action_queue_count = data["action_queue_count"]
@@ -74,16 +96,31 @@ def generate_summary(date_str: str, data: dict) -> str:
             first_note += "..."
         notes = first_note
     
-    summary = f"""===== KAIROS autoDream — {date_str} =====
-心跳次数：{heartbeat_count}
-待办处理：{action_queue_count}
-主要活动：{main_activity}
-备注：{notes}
-"""
-    return summary
+    summary_lines = [
+        f"===== KAIROS autoDream — {date_str} =====",
+        f"心跳次数：{heartbeat_count}",
+        f"待办处理：{action_queue_count}",
+        f"主要活动：{main_activity}",
+        f"备注：{notes}",
+    ]
+    
+    # 碎片部分
+    if fragments:
+        summary_lines.append("")
+        summary_lines.append(f"📌 近期碎片灵感（{len(fragments)}条）")
+        for frag in fragments[:5]:  # 最多显示5条
+            date_label = frag.get("_date", "?")
+            topics = " #".join(frag.get("topics", [])[:3])
+            content_preview = frag.get("content", "")[:40]
+            confidence = frag.get("confidence", "low")
+            confidence_icon = "🔥" if confidence == "high" else "💤"
+            summary_lines.append(f"[{date_label}] #{topics}")
+            summary_lines.append(f"  {confidence_icon} {content_preview}...")
+    
+    return "\n".join(summary_lines)
 
 
-def update_memory(memory_path: Path, date_str: str, data: dict):
+def update_memory(memory_path: Path, date_str: str, data: dict, fragments: list):
     """更新 MEMORY.md 文件"""
     # 准备要追加的内容
     content_lines = [f"### {date_str}"]
@@ -104,6 +141,17 @@ def update_memory(memory_path: Path, date_str: str, data: dict):
     # 如果没有特别的事项，添加默认记录
     if len(content_lines) == 1:
         content_lines.append(f"- 心跳次数：{data['heartbeat_count']}，待办处理：{data['action_queue_count']}")
+    
+    # 碎片存档部分
+    if fragments:
+        content_lines.append(f"- 碎片存档：{len(fragments)}条")
+        # 高置信度碎片单独列出
+        high_frag = [f for f in fragments if f.get("confidence") == "high"]
+        if high_frag:
+            topics_set = set()
+            for f in high_frag:
+                topics_set.update(f.get("topics", []))
+            content_lines.append(f"  🔥 高置信度（{len(high_frag)}条）：#{' #'.join(list(topics_set)[:5])}")
     
     content_lines.append("")  # 空行
     
@@ -155,12 +203,16 @@ def main():
     # 解析内容
     data = parse_heartbeats(content)
     
+    # 读取近期碎片
+    fragments_dir = script_dir / "fragments"
+    fragments = read_recent_fragments(fragments_dir, days=3)
+    
     # 生成并打印摘要
-    summary = generate_summary(date_str, data)
+    summary = generate_summary(date_str, data, fragments)
     print(summary)
     
     # 更新 MEMORY.md
-    update_memory(memory_path, date_str, data)
+    update_memory(memory_path, date_str, data, fragments)
     
     print(f"MEMORY.md 已更新")
 

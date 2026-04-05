@@ -11,12 +11,17 @@
 ### 项目目标
 为 Lucas 打造主动式 AI 助手框架，减少手动触发任务
 
-### 当前进度（2026-04-04 完成 Phase 1-3）
+### 当前进度（2026-04-05 Phase 1 全部完成）
 
 **Phase 1.1 ✅ HEARTBEAT.md 命令式改造**
 - 从顺序清单改为模块化独立判断
 - Step 1 有任务 → 直接响应，不走 Step 4
 - 定期任务与 heartbeat 分离
+
+**Phase 1.2 ✅ 碎片存档系统 v2（Fragment System）**
+- HEARTBEAT.md：碎片缓冲区 + 批量存档 + 通知延迟逻辑（Step 5）
+- chat-memory.ps1：Save-Fragment 改写 buffer，flushfragments 批量落盘
+- autoDream.py：每日摘要自动读取最近3天碎片并写入 MEMORY.md
 
 **Phase 2 ✅ kairos.py CLI 入口**
 - 路径：`C:/Users/xumou/.openclaw/workspace/memory/kairos/`
@@ -125,8 +130,12 @@ savefragment / searchfragments / loadrecent / cleanupfragments / removefragment 
 - 日上限：10条，高置信度优先
 
 ### 待完成
-- autoDream.py 整合碎片到每日报告
-- MEMORY.md 碎片系统完整文档
+- autoDream.py 整合碎片到每日报告 ✅（2026-04-05）
+
+### autoDream.py 碎片整合
+- 每日凌晨生成摘要时，自动读取最近3天碎片存档
+- MEMORY.md 更新时追加碎片统计（总条数 + 高置信度 topic 列表）
+- 摘要输出包含最近5条碎片预览（topics + 内容节选）
 
 ## 腾讯云新加坡服务器
 - IP: 43.160.218.220，SSH: 22022，代理: 15430
