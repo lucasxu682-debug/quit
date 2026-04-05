@@ -161,7 +161,23 @@ savefragment / searchfragments / loadrecent / cleanupfragments / removefragment 
 - ✅ autoDream.py（凌晨记忆整理脚本）
 - ✅ 作业截止检查 Cron
 - ✅ GitHub Trending 收藏 Cron
+- ✅ Weekly Audit（每周六全面检查）
 - 服务器结果拉取（需先配服务器）
+
+### Weekly Audit 待后续功能
+- 上次 vs 本次对比（变好/变坏）
+- 错误模式识别（同一error连续出现=慢性问题）
+- Cron执行时间趋势
+- 碎片质量报告
+- Skills健康度追踪
+- GitHub remote连通性验证
+
+### Weekly Audit
+- 脚本：memory/kairos/audit.py
+- Cron: 每周六 09:00（ID: 2e71b2e9）
+- 检查范围：Git / 文件 / KAIROS状态 / Cron / 学业截止 / MEMORY.md
+- 严重程度分级：🔴 Critical / 🟡 Attention / 🟢 Normal
+- 历史记录：memory/kairos/audits/YYYY-MM-DD.md
 
 ## Skills 清单
 | Skill | 路径 | 用途 |
