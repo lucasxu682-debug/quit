@@ -137,6 +137,14 @@ savefragment / searchfragments / loadrecent / cleanupfragments / removefragment 
 - MEMORY.md 更新时追加碎片统计（总条数 + 高置信度 topic 列表）
 - 摘要输出包含最近5条碎片预览（topics + 内容节选）
 
+## Discord To-Do-List 频道
+- 频道名：to-do-list
+- 频道 ID：1490258439220236349
+- 用途：所有任务的永久记录，包括已完成/待处理/已取消
+- 格式：🆕 + 描述 + 来源 + 状态 + 备注
+- 状态：✅ Done / ⏳ Pending / ❌ Cancelled
+- 原则：任何任务都要留一条记录在 to-do-list
+
 ## 腾讯云新加坡服务器
 - IP: 43.160.218.220，SSH: 22022，代理: 15430
 - 详情见：`memory/singapore-server-guide.md`
