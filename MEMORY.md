@@ -158,10 +158,20 @@ savefragment / searchfragments / loadrecent / cleanupfragments / removefragment 
 - 详情见：`memory/singapore-server-guide.md`
 
 ## 待完成项目（锦上添花）
-- autoDream.py（凌晨记忆整理脚本）
-- 作业截止检查 Cron
-- GitHub Trending 收藏 Cron
+- ✅ autoDream.py（凌晨记忆整理脚本）
+- ✅ 作业截止检查 Cron
+- ✅ GitHub Trending 收藏 Cron
 - 服务器结果拉取（需先配服务器）
+
+## Skills 清单
+| Skill | 路径 | 用途 |
+|-------|------|------|
+| chat-memory | `__skills__/chat-memory/` | 对话存档 + 碎片存档系统 |
+| vision | `__skills__/vision/` | Gemini 图片理解 |
+| ocr | `__skills__/ocr/` | Tesseract 文字识别 |
+| discord | `skills/discord/` | Discord 频道操作 |
+| superpowers | `skills/superpowers/` | spec-first 开发流程 |
+| github | `skills/github/` | gh CLI 操作 |
 
 ## 重要规则
 
@@ -181,8 +191,6 @@ savefragment / searchfragments / loadrecent / cleanupfragments / removefragment 
 ### Discord 心跳/告警问题
 - 状态：✅ 已解决
 - 方案：cron job（每3分钟）检查 progress.json，超时发 Discord to-do-list 告警
-
-### 计划/方案提出前必读
 
 ### 计划/方案提出前必读
 **提出任何计划或方案之前，必须先判断可行性。不可行的方案不要给用户选。**
