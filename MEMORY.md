@@ -158,6 +158,14 @@ savefragment / searchfragments / loadrecent / cleanupfragments / removefragment 
 - IP: 43.160.218.220，SSH: 22022，代理: 15430
 - 详情见：`memory/singapore-server-guide.md`
 
+## 港股每日追踪系统
+- 脚本：memory/kairos/stock_tracker.py
+- Cron：每天 09:30 HKT（周一至周五，ID: a8c91f52）
+- 频道：Discord hk-stock（ID: 1500327713228550276）
+- 持仓：01347.HK 华虹（成本 99.987×1000）/ 03993.HK 洛阳钼业（成本 20.361×6000）
+- 报告内容：持仓盈亏 + 涨跌 + 成交量 + 影响因素 + 恒生指数 + 术语解释
+- ⚠️ 数据来源 Yahoo Finance可能有延迟，以实际账户为准
+
 ## 待完成项目（锦上添花）
 - ✅ autoDream.py（凌晨记忆整理脚本）
 - ✅ 作业截止检查 Cron
