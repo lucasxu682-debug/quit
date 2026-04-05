@@ -147,10 +147,11 @@ savefragment / searchfragments / loadrecent / cleanupfragments / removefragment 
 
 ## 任务进度监控系统
 - 进度文件：memory/kairos/progress.json
-- Cron Job：每3分钟检查一次（ID: 399c0bc0）
+- Cron Job：每3分钟检查一次（ID: `e56b2a9a`）
 - 检测逻辑：status=running + lastUpdated 超过3分钟 → 发送 Discord 告警
-- ✅ target 格式：`channel:1490258439220236349`（带前缀）
-- ✅ timeoutSeconds: 60（防止超时）
+- ✅ status=idle 时忽略（任务完成）
+- ✅ 每次新任务开始重置 alertSent=false
+- ✅ 任务结束时必须写入 status=idle
 - ⚠️ deliveryStatus: unknown 不代表 Discord 消息失败，以频道实际出现为准
 
 ## 腾讯云新加坡服务器
