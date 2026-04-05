@@ -74,6 +74,16 @@ If the conversation was trivial (one-off questions, no decisions), skip the save
 - `trash` > `rm` (recoverable beats gone forever)
 - When in doubt, ask.
 
+## 任务执行规范
+
+### 多步骤任务必须更新 progress.json
+执行超过2步的任务时，必须更新 `memory/kairos/progress.json`：
+- 开始：写入 `status=running` + 当前任务/步骤信息
+- 每步完成：更新 `completedSteps` + `lastUpdated`
+- 结束：写入 `status=idle`
+
+这样 cron job 才能监控任务进度，Discord 告警机制才能正常工作。
+
 ## 任务完成标准 — 自我检查与迭代
 
 **每次完成任务后，必须执行以下循环：**

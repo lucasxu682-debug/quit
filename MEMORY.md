@@ -167,12 +167,18 @@ savefragment / searchfragments / loadrecent / cleanupfragments / removefragment 
 **每次任务执行时，无论什么任务，每3分钟进行一次自我进度检测。**
 - 目的：让 Lucas 能判断我是卡死了还是在进行某个步骤
 - webchat：heartbeat回复即可看到（每次heartbeat就是一次自然检测）
-- discord：暂无好方案，待后续解决
+- discord：cron job 每3分钟检查 progress.json，超时则发告警到 to-do-list ✅
 
-### Discord 心跳/告警问题（待解决）
-- 问题：heartbeat是OpenClaw内部行为，不会自动发Discord消息
-- 可能的解法：cron job感知progress文件，超时才发告警
-- 状态：暂时搁置，Discord属于"盲区"
+### 任务进度文件规则
+**执行多步骤任务（>2步）时，必须更新 progress.json：**
+1. 任务开始时：写入 `status=running` + 开始时间 + 步骤信息
+2. 每完成一个步骤：更新 `completedSteps` + `lastUpdated` + 当前步骤描述
+3. 任务结束时：写入 `status=idle`
+文件路径：`memory/kairos/progress.json`
+
+### Discord 心跳/告警问题
+- 状态：✅ 已解决
+- 方案：cron job（每3分钟）检查 progress.json，超时发 Discord to-do-list 告警
 
 ### 计划/方案提出前必读
 
