@@ -145,6 +145,12 @@ savefragment / searchfragments / loadrecent / cleanupfragments / removefragment 
 - 状态：✅ Done / ⏳ Pending / ❌ Cancelled
 - 原则：任何任务都要留一条记录在 to-do-list
 
+## 任务进度监控系统
+- 进度文件：memory/kairos/progress.json
+- Cron Job：每3分钟检查一次（ID: a01d31b1）
+- 检测逻辑：status=running + lastUpdated 超过3分钟 → 发送 Discord 告警
+- ⚠️ isolated session 发 Discord 消息有格式限制，待修复
+
 ## 腾讯云新加坡服务器
 - IP: 43.160.218.220，SSH: 22022，代理: 15430
 - 详情见：`memory/singapore-server-guide.md`
