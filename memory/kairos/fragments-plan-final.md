@@ -147,8 +147,8 @@ chat-memory.ps1 -Action loadrecent -Limit 10
 ### Phase 1（核心必做）
 1. **chat-memory.ps1**：savefragment / searchfragments / loadrecent(-Limit) / cleanupfragments / removefragment / keepfragment ✅
 2. **HEARTBEAT.md**：碎片自动判断 + 缓冲区 + 批量存档 + 清理 + 通知延迟逻辑 ✅（2026-04-05）
-3. **autoDream.py**：碎片读入每日报告 ❌
-4. **MEMORY.md**：更新碎片系统说明 ❌
+3. **autoDream.py**：碎片读入每日报告 ✅（2026-04-05）
+4. **MEMORY.md**：更新碎片系统说明 ✅（2026-04-05）
 
 ### Phase 2（体验优化，上线后择机做）
 - 日上限绕过机制（用户主动触发）
