@@ -199,6 +199,7 @@ Skills provide your tools. When you need one, check its `SKILL.md`. Keep local n
 | **chat-memory** | 对话结束/新对话开始 | 自动触发（Session Startup） |
 | **vision** | 用户发送图片并要求描述/分析画面 | 看图 / describe / analyze / 截图 / 照片 |
 | **ocr** | 用户发送图片并要求提取文字 | 提取文字 / OCR / 文字识别 / scan / 图片转文字 |
+| **discord** | Discord 频道操作/发消息/任务记录 | Discord / 频道 / to-do-list / dream-report |
 | **superpowers** | 用户想构建/规划任何新功能，或调试 bug | "我想做个 X" / "帮我规划" / "let's build" / "help me plan" / "this is broken" |
 | **github** | GitHub 操作：查 PR/CI 状态、创建 issue、review 代码 | GitHub / gh / PR / issue / repo / stars |
 
@@ -219,6 +220,10 @@ Skills provide your tools. When you need one, check its `SKILL.md`. Keep local n
 用户提到 GitHub 操作
     │
     └── GitHub skill（gh CLI）
+
+用户提到 Discord 频道操作
+    │
+    └── Discord skill（message 工具 + 频道 ID）
 ```
 
 ---
