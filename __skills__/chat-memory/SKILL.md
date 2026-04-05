@@ -75,3 +75,67 @@ powershell -File memory/conversations/chat-memory.ps1 -Action load
 |------|--------|------|
 | `MaxAgeDays` | 30 | 保留天数 |
 | `ConvDir` | `$PWD/memory/conversations` | 存档目录 |
+
+## 碎片存档系统（Fragment System）
+
+对话过程中自动存档有价值想法，不依赖用户主动触发。
+
+### 碎片存档流程
+
+```
+Save-Fragment → fragments-buffer.json（内存缓冲）
+                        ↓
+         heartbeat 时 flushfragments
+                        ↓
+         批量写入 fragments/YYYY-MM-DD.json（正式存档）
+```
+
+### 置信度分级
+
+| 置信度 | 信号 | 示例 |
+|--------|------|------|
+| high | 问基础关键问题 / 表达自我理解 / 连续追问2次以上 | "什么叫 context window？" |
+| low | 正常延伸对话 / 顺嘴提新方向 | "对了能不能用在xxx上？" |
+
+### 碎片函数命令
+
+```powershell
+# 保存碎片（写入 buffer）
+powershell -File chat-memory.ps1 -Action savefragment `
+  -Content "碎片内容" `
+  -Topics "topic1,topic2" `
+  -Confidence "high" `
+  -MainContext "当前讨论话题"
+
+# 搜索碎片
+powershell -File chat-memory.ps1 -Action searchfragments -Query "关键词"
+
+# 加载近期碎片
+powershell -File chat-memory.ps1 -Action loadrecent -Limit 10
+
+# 清理过期碎片（超过30天）
+powershell -File chat-memory.ps1 -Action cleanupfragments
+
+# 强制将 buffer flush 到存档（通常由 heartbeat 自动触发）
+powershell -File chat-memory.ps1 -Action flushfragments
+
+# 保留某个碎片（promote = true）
+powershell -File chat-memory.ps1 -Action keepfragment -Query "关键词"
+
+# 删除某个碎片
+powershell -File chat-memory.ps1 -Action removefragment -Query "关键词"
+```
+
+### 碎片通知规则（HEARTBEAT.md Step 5）
+
+- 有新碎片（lastFragmentTime 更新）+ 距用户上一条消息 > 5 分钟 → 展示通知
+- 当天碎片数量 ≤ 10 条（防止刷屏）
+- 高置信度优先通知
+
+### 文件位置
+
+| 文件 | 路径 |
+|------|------|
+| Buffer | `memory/kairos/fragments-buffer.json` |
+| 存档 | `memory/kairos/fragments/YYYY-MM-DD.json` |
+| 进度文件 | `memory/kairos/progress.json` |

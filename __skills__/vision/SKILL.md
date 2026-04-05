@@ -1,53 +1,59 @@
-# skill: vision
-# description: Use Ollama's llava model to analyze and describe images. Invoke when user sends a screenshot, photo, or image and needs visual understanding.
-# triggers: 看图 / 看一眼 / 图片分析 / 描述这张图 / 这是什么 / describe / analyze / screenshot / 截图 / 照片 / 图片描述
+---
+name: vision
+description: >
+  Use Gemini subagent to analyze and describe images. Invoke when user sends a screenshot,
+  photo, or image and needs visual understanding. NOT for: extracting text from images (use ocr skill).
+triggers: 看图 / 描述一下 / 分析这张 / 这是什么 / describe / analyze / screenshot / 截图 / 照片 / 图片
+---
 
-## When to Use This Skill
+# Vision Skill — 图片理解
 
-<trigger>
-用户发送了一张图片/截图/照片，并要求描述、分析、理解画面内容时使用。
+## 触发条件
+
+用户发送图片并问"什么意思"、"描述一下"、"这是什么"时使用。
 不包括：只需要提取图片中的文字（那是 ocr skill 的职责）。
-</trigger>
 
-## How It Works
+## 实际使用方式
 
-1. Receive an image attachment or path from the user
-2. Use Ollama's `llava` model to analyze the image
-3. Return a detailed description of what's in the image
+**主对话用 MiniMax M2（不支持图片），图片分析用 Gemini 子代理。**
 
-## Ollama Model
-
-- **Model name**: `llava:latest`
-- **Size**: 4.7 GB
-- **Purpose**: Visual question answering, image description, screenshot understanding
-
-## Usage
-
-When the user sends an image, run:
+当收到图片时，spawn 一个 Gemini 子代理：
 
 ```
-ollama run llava "Describe what's in this image in detail. Just describe what you see on the screen: <imagePath>" --verbose
+sessions_spawn:
+  task: "描述/分析这张图片中的一切，请详细说明"
+  runtime: "subagent"
+  model: "google/gemini-2.5-flash"
+  mode: "run"
 ```
 
-### Important Notes
+## 为什么用 Gemini
 
-- Use `--verbose` flag to see full output
-- The image path should be an absolute path (Windows format: `C:/Users/...`)
-- Forward slashes work better than backslashes in the command
-- If the command seems slow, wait for it to complete (can take 30-60 seconds)
-- If it fails, try checking if Ollama is running: `ollama list`
+- MiniMax M2 不支持图片输入
+- Gemini 2.5 Flash 多模态强，context window 1M
+- 子代理处理完结果自动返回主对话
 
-## Troubleshooting
+## 决策流程
 
-- **Error "model not found"**: Run `ollama pull llava` to download the model
-- **Error "connection refused"**: Ollama service might not be running; try `ollama serve`
-- **Very slow**: Normal for first run; model loads into memory
+```
+用户发送图片
+    │
+    ├── 问"图里写的什么" / "提取文字" → ocr skill
+    │
+    └── 问"这张图什么意思" / "描述一下" → vision skill（Gemini 子代理）
+            │
+            └── 不确定 → 先 vision，文字部分补充 ocr
+```
 
-## Example Use Cases
+## 使用示例
 
-<examples>
-- User sends a screenshot of an error message → describe the error
-- User sends a photo → describe what's in it
-- User sends a graph/chart → describe the data trends
-- User sends an email page → describe the content
-</examples>
+用户发送图片说"帮我看看这张图"：
+1. Spawn Gemini 子代理分析图片
+2. 子代理返回描述结果
+3. 在主对话呈现结果
+
+## 注意事项
+
+- 图片路径要用绝对路径（Windows: `C:/Users/...`）
+- Forward slash 比 backslash 更稳定
+- 第一次分析可能较慢（Gemini 预热）
