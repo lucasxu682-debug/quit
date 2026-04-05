@@ -27,8 +27,8 @@ def read_observation_log(obs_dir: Path, date_str: str) -> str | None:
 
 def parse_heartbeats(content: str) -> dict:
     """解析 observation log 内容，提取 heartbeat 信息"""
-    # 统计 heartbeat 出现次数
-    heartbeat_count = content.count("### heartbeat")
+    # 统计 heartbeat 出现次数（兼容 ## HH:MM Heartbeat 格式）
+    heartbeat_count = len(re.findall(r"## \d{2}:\d{2} Heartbeat", content))
     
     # 统计 action-queue 处理次数
     action_queue_count = content.count("检查了 action-queue")
@@ -39,10 +39,11 @@ def parse_heartbeats(content: str) -> dict:
     # 提取值得记录的事项
     notable_items = []
     
-    # 从 "今日状态汇总" 中提取信息
-    summary_match = re.search(r"### 今日状态汇总\n(.+)", content, re.DOTALL)
-    if summary_match:
-        notable_items.append(summary_match.group(1).strip())
+    # 从 "备注" 行中提取有价值信息
+    notes = re.findall(r"- 备注：(.+)", content)
+    for note in notes:
+        if note and note not in ["无", "无异常"]:
+            notable_items.append(note)
     
     # 从 "判断结果" 中提取主动行动
     actions = re.findall(r"- 无主动行动|- 执行了[^:]+|- 回复 HEARTBEAT_OK", content)
@@ -68,7 +69,15 @@ def read_recent_fragments(fragments_dir: Path, days: int = 3) -> list:
         frag_file = fragments_dir / f"{date.strftime('%Y-%m-%d')}.json"
         if frag_file.exists():
             try:
-                data = json.loads(frag_file.read_text(encoding="utf-8"))
+                # 尝试 utf-8-sig（处理 BOM），失败则用 binary 跳过 BOM 后再试
+                try:
+                    raw = frag_file.read_bytes()
+                    # 去掉 BOM
+                    if raw.startswith(b'\xef\xbb\xbf'):
+                        raw = raw[3:]
+                    data = json.loads(raw.decode("utf-8"))
+                except UnicodeError:
+                    data = json.loads(frag_file.read_text("utf-8", errors="replace"))
                 for frag in data.get("fragments", []):
                     frag["_date"] = date.strftime("%m-%d")
                     fragments.append(frag)

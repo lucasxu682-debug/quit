@@ -20,16 +20,13 @@
 
 格式：
 ```
-## HH:MM
+## HH:MM Heartbeat
 
-### heartbeat
-- 检查了 action-queue：有无
-- 当前时间：HH:MM
+- action-queue：有无
 - 本次心跳类型：首次/日常
-
-### 判断结果
-- 有行动 → 描述行动内容
-- 无行动 → 回复 HEARTBEAT_OK
+- Discord 新消息：检查结果（未配置则写"未配置"）
+- 判断结果：描述
+- 备注：可选补充说明
 ```
 
 ---
@@ -64,9 +61,9 @@
 - 检查 `memory/kairos/fragments-notify.json`
   - 读取 `lastFragmentTime` 和 `lastUserTime`
 - 满足以下全部条件时，在回复末尾附加碎片通知：
-  - 有新碎片（`lastFragmentTime` > `lastNotifyTime`）
+  - 有新碎片（`lastFragmentTime` > `lastNotifyTime`，且 `lastNotifyTime` 非空）
   - 距用户上一条消息已超过 5 分钟（`now - lastUserTime` > 5min）
-  - 当前 heartbeat 是用户发消息触发的（即不是定时 heartbeat）
+  - 当天碎片数量 ≤ 10 条（防止刷屏）
 - 通知格式：`📬 近期碎片（X条）：[topic1] [topic2]...`
 - 更新 `lastNotifyTime` = `now`
 
