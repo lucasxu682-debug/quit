@@ -20,9 +20,10 @@ KAIROS_DIR = WORKSPACE / "memory/kairos"
 def run(cmd: str) -> tuple[str, int]:
     """执行 shell 命令，返回 (stdout, returncode)"""
     result = subprocess.run(
-        cmd, shell=True, capture_output=True, text=True, cwd=WORKSPACE
+        cmd, shell=True, capture_output=True, text=True,
+        encoding="utf-8", errors="replace", cwd=WORKSPACE
     )
-    return result.stdout.strip(), result.returncode
+    return (result.stdout or "").strip(), result.returncode
 
 
 def heading(text: str) -> str:
